@@ -1,6 +1,18 @@
+# Virtual Environment
 venv/
+
+# Python
 __pycache__/
 *.pyc
-data/clean/
-data/curated/
+
+# Streaming & Data
+stream_data/
+data/
+
+# Logs
 logs/
+
+# File formats
+*.parquet
+*.json
+*.log

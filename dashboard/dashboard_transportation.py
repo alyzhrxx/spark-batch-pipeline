@@ -36,22 +36,43 @@ data = load_data()
 if data.empty:
     st.warning("No transportation data yet...")
 else:
+    # KPI
     total_trips, total_revenue, avg_distance = compute_kpis(data)
 
-    st.metric("Total Trips", total_trips)
-    st.metric("Total Revenue", total_revenue)
-    st.metric("Avg Distance", avg_distance)
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Total Trips", total_trips)
+    col2.metric("Total Revenue", int(total_revenue))
+    col3.metric("Avg Distance", round(avg_distance, 2))
 
-    st.subheader("Revenue per City")
-    st.bar_chart(revenue_per_city(data))
-
-    st.subheader("Trips per Driver")
-    st.bar_chart(trips_per_driver(data))
-
-    st.subheader("Alerts")
+    # Alerts
+    st.subheader("Traffic Alerts")
     alerts = check_alerts(data)
     for alert in alerts:
         st.error(alert)
+
+    # Bar Charts
+    st.subheader("Fare per City")
+    st.bar_chart(revenue_per_city(data))
+
+    st.subheader("Vehicle Distribution")
+    vd = vehicle_distribution(data)
+    if vd is not None:
+        st.bar_chart(vd)
+
+    # Line Charts
+    st.subheader("Real-Time Traffic")
+    rt = realtime_trips(data)
+    if rt is not None:
+        st.line_chart(rt)
+
+    st.subheader("Mobility Trend")
+    mt = mobility_trend(data)
+    if mt is not None:
+        st.line_chart(mt)
+
+    # Tables
+    st.subheader("Abnormal Trips")
+    st.dataframe(abnormal_trips(data))
 
     st.subheader("Live Trips")
     st.dataframe(data.tail(20))
